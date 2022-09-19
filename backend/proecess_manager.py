@@ -7,7 +7,7 @@ import threading
 import threading
 
 from recorder import start_recorder 
-  
+from takt import play_tone
 def print_cube(num):
     """
     function to print cube of given num
@@ -18,7 +18,9 @@ if __name__ == "__main__":
 
     # creating thread
     t1 = threading.Thread(target=start_recorder,)
-    t2 = threading.Thread(target=print_cube, args=(10,))
+    t2 = threading.Thread(target=play_tone)
+  
+    #t2 = threading.Thread(target=play_tone, args=(10,))
   
     # starting thread 1
     t1.start()

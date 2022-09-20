@@ -9,15 +9,16 @@ class MyWidget(QtWidgets.QWidget):
 
         self.hello = ["Hallo Welt", "Hei maailma", "Hola Mundo", "Привет мир"]
 
-        self.button = QtWidgets.QPushButton("Click me!")
+        self.button_takt = QtWidgets.QPushButton("Start Takt")
+        self.button_record = QtWidgets.QPushButton("Click me3!")
         self.text = QtWidgets.QLabel("Hello World",
                                      alignment=QtCore.Qt.AlignCenter)
 
         self.layout = QtWidgets.QVBoxLayout(self)
         self.layout.addWidget(self.text)
-        self.layout.addWidget(self.button)
+        self.layout.addWidget(self.button1)
 
-        self.button.clicked.connect(self.magic)
+        self.button1.clicked.connect(self.magic)
 
     @QtCore.Slot()
     def magic(self):
@@ -28,7 +29,7 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication([])
 
     widget = MyWidget()
-    widget.resize(800, 600)
+    widget.resize(200, 300)
     widget.show()
 
     sys.exit(app.exec())

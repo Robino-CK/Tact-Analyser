@@ -13,8 +13,8 @@ class Tone:
         self.tone_length = tone_length
         self.frequenz = frequenz
         if (tone_length == 1):
-            self.simple_audio_stamps = self.sa_timestemps[0]
-        self.calculate_audio_array()
+            self.simple_audio_stamps = self.sa_timestemps[1]
+        self.calculate_wave()
 
     
     def half_second(self, timestamp_array):
@@ -22,7 +22,7 @@ class Tone:
         return self.sa_timestemps.item(index_of_array_ts[0][0] - 1)
 
     def calculate_wave(self):
-        audio_array = np.linspace(0, self.tone_length, self.tone_length * self.sa_timestemps[0], False)
+        audio_array = np.linspace(0, self.tone_length, self.tone_length * self.sa_timestemps[1], False)
         self.wave = (np.sin(self.frequenz * audio_array * 2 * np.pi)  )
     
     def calculate_audio_array(self):
@@ -53,18 +53,22 @@ class Song:
         audio *= 32767 / np.max(np.abs(audio))     
         audio = audio.astype(np.int16)
         play_obj = sa.play_buffer(audio, 1, 2,11025 * 4)
+        play_obj.stop()
         play_obj.wait_done()
 
         return
 def play_tone():
-    tone = Tone(1,octave_4["C"])
-    tone.play()
+    song = Song()
+    song.play_alle_meine_endchen()
+    #tone = Tone(1,octave_4["C"])
+    #tone.play()
 # calculate note frequencies
-a_req = 440
-chr_freq = a_req * 2 ** (4 / 12)
-e_freq = a_req * 2 ** (7 / 12)
-song = Song()
-song.play_alle_meine_endchen()
+#a_req = 440
+play_tone()
+#chr_freq = a_req * 2 ** (4 / 12)
+#e_freq = a_req * 2 ** (7 / 12)
+#song = Song()
+#song.play_alle_meine_endchen()
 #tone = Tone(1,chr_freq)
 #tone.play()
 

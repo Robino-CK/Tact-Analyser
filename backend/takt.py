@@ -1,27 +1,12 @@
 import math
 from os import times
 import numpy as np
-import simpleaudio as sa
+import simpleaudio as sa # # https://simpleaudio.readthedocs.io/en/latest/tutorial.html 
 import time					
-# https://simpleaudio.readthedocs.io/en/latest/tutorial.html 
-octave_4 = {"C": 261.63,"CIS" : 277.18, "D": 293.66, "DIS": 311.13, 
-"E":329.63, "F": 349.23, "FIS": 369.99, "G": 392.00 ,  "GIS": 415.30, "A": 440.0, "AIS": 466.16, "B": 493.88}
+base_tone = 'A', 4
+tunning_Hz = 440
 sa_timestemps = np.array([11025, 11025 * 2, 11025 * 4, 11025 * 8], np.int32)
 tone_names = np.array(['C', 'CIS', 'D', 'DIS', 'E', 'F', 'FIS', 'G', 'GIS', 'A', 'AIS', 'B' ],  dtype=object)
-
-
-def tone(tone_name, octave):
-    index_of_tone = np.where(tone_names == tone_name)[0][0] 
-    return tone_by_number(index_of_tone + len(tone_names) * octave)
-
-def tone_by_number(tone_number):
-    # tone_number = {0,1,2,...., 8*12} = {C_0, DIS_0,....}
-    index_A_4 = np.where(tone_names == 'A')[0][0] + len(tone_names) * 4
-    # do in A_4 
-    distance_to_A_4 = tone_number - index_A_4
-    # fromular from: https://pages.mtu.edu/~suits/NoteFreqCalcs.html
-    return ((2 ** (1/ 12)) **  distance_to_A_4) * 440
-    
 
 def play_numpy(np_array):
     audio = np.hstack(np_array)   
@@ -34,39 +19,50 @@ def play_numpy(np_array):
 
 
 class Tone:
-    # tone_length must be value like 0.125,0.25,0,5,1,2,4,...
-    def __init__(self, tone_length, frequenz):
-        self.tone_length = tone_length
-        self.frequenz = frequenz
-        if (tone_length == 1):
-            self.simple_audio_stamps = sa_timestemps[3]
-        self.calculate_wave()
+    def __init__(self, tone = 'C', octave = 4):
+        self.tone = tone
+        self.octave = octave
+        self.tone_length = 1
+        self.set_index()
+        self.set_frequenz()
+        self.set_phase() # numpy array with phase. simpleaudio uses it!
 
-    
+    #useless:    
     def half_second(self, timestamp_array):
         index_of_array_ts = np.where(self.sa_timestemps == timestamp_array)
         return self.sa_timestemps.item(index_of_array_ts[0][0] - 1)
 
-    def calculate_wave(self):
-        audio_array = np.linspace(0, self.tone_length, self.tone_length * self.simple_audio_stamps, False)
-        self.wave = (np.sin(self.frequenz * audio_array * 2 * np.pi)  )
-    
+    def set_index(self):
+        # index like = {0,1,2,...., 8*12 - 1} = {C_0, DIS_0,...., B_8}
+        self.index = np.where(tone_names == self.tone)[0][0] + len(tone_names) * self.octave
+   
+    def set_frequenz(self):
+        index_A_4 = np.where(tone_names == base_tone[0])[0][0] + len(tone_names) * base_tone[1]
+        # do in A_4 
+        distance_to_A_4 = self.index - index_A_4
+        # fromular from: https://pages.mtu.edu/~suits/NoteFreqCalcs.html
+        self.frequenz = ((2 ** (1/ 12)) **  distance_to_A_4) * tunning_Hz
+
+
+    def set_phase(self):
+        audio_array = np.linspace(0, self.tone_length, self.tone_length * sa_timestemps[3], False)
+        self.phase = (np.sin(self.frequenz * audio_array * 2 * np.pi)  )
+   
     def play(self):
-        play_numpy(self.wave)
+        play_numpy(self.phase)
+    
     
         
 
 def play_tone():
-    fre = tone('D',4)
-    c =  Tone(1,fre)
-    d = Tone(1,octave_4["D"])
-    e = Tone(1,octave_4["E"])
-    f = Tone(1,octave_4["F"])
-    g = Tone(1,octave_4["G"])
-    a = Tone(1,octave_4["A"])
-    song = (c.wave, d.wave, e.wave, f.wave, g.wave,g.wave, a.wave, a.wave,  g.wave)
+    c = Tone()
+    d = Tone('D')
+    e = Tone('E')
+    f = Tone('F')
+    g = Tone('G')
+    a = Tone('A')
+    song = (c.phase, d.phase, e.phase, f.phase, g.phase,g.phase, a.phase, a.phase,  g.phase)
     wave = np.hstack(song)   
-    wave = np.hstack((song))
     tic = time.perf_counter() # Start Time
     play_numpy(wave)
     toc = time.perf_counter() # End Time

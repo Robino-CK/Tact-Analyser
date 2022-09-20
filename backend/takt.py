@@ -3,6 +3,7 @@ from os import times
 import numpy as np
 import simpleaudio as sa # # https://simpleaudio.readthedocs.io/en/latest/tutorial.html 
 import time					
+
 base_tone = 'A', 4
 tunning_Hz = 440
 sa_timestemps = np.array([11025, 11025 * 2, 11025 * 4, 11025 * 8], np.int32)
@@ -16,7 +17,6 @@ def play_numpy(np_array):
     play_obj = sa.play_buffer(audio, 1, 2,sa_timestemps[1])
     play_obj.wait_done()
     play_obj.stop()
-
 
 class Tone:
     def __init__(self, tone = 'C', octave = 4):
@@ -37,24 +37,22 @@ class Tone:
         self.index = np.where(tone_names == self.tone)[0][0] + len(tone_names) * self.octave
    
     def set_frequenz(self):
+        # should be A_4... otherwise thinks can be random 
         index_A_4 = np.where(tone_names == base_tone[0])[0][0] + len(tone_names) * base_tone[1]
-        # do in A_4 
         distance_to_A_4 = self.index - index_A_4
         # fromular from: https://pages.mtu.edu/~suits/NoteFreqCalcs.html
         self.frequenz = ((2 ** (1/ 12)) **  distance_to_A_4) * tunning_Hz
 
 
     def set_phase(self):
+        # TODO:
         audio_array = np.linspace(0, self.tone_length, self.tone_length * sa_timestemps[3], False)
         self.phase = (np.sin(self.frequenz * audio_array * 2 * np.pi)  )
    
     def play(self):
         play_numpy(self.phase)
     
-    
-        
-
-def play_tone():
+def play_song():
     c = Tone()
     d = Tone('D')
     e = Tone('E')
@@ -68,14 +66,11 @@ def play_tone():
     toc = time.perf_counter() # End Time
     # Print the Difference Minutes and Seconds
     print(f"wave length: {len(song)}")
-    print(f"Build finished in {(toc - tic)} minutes {(toc - tic)%60:0.0f} seconds")
+    
+    print(f"Build finished in {(toc - tic)} seconds {(toc - tic)%60:0.0f} seconds")
     # For additional Precision
     print(f"Build finished in {toc - tic:0.4f} seconds")
 
-play_tone()
-
-
-#chr_freq = a_req * 2 ** (4 / 12)
-#e_freq = a_req * 2 ** (7 / 12)
+play_song()
 
 

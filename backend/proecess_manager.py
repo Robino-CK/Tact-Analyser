@@ -1,5 +1,5 @@
 from asyncio import run_coroutine_threadsafe
-import threading
+
 
 # Python program to illustrate the concept
 # of threading

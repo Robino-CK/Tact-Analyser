@@ -1,8 +1,8 @@
-import math
-from os import times
 import numpy as np
 import simpleaudio as sa # # https://simpleaudio.readthedocs.io/en/latest/tutorial.html 
 import time					
+import librosa
+import threading
 
 base_tone = 'A', 4
 tunning_Hz = 440
@@ -71,6 +71,27 @@ def play_song():
     # For additional Precision
     print(f"Build finished in {toc - tic:0.4f} seconds")
 
-play_song()
+class Takt:
+    # docu: https://simpleaudio.readthedocs.io/en/latest/simpleaudio.html
+    def __init__(self, bpm):
+        self.bpm = bpm
+        self.audio_path = 'res/drum_stick.wav'  # sound origin: https://www.fesliyanstudios.com/royalty-free-sound-effects-download/drum-sticks-278
+        self.wave_obj = sa.WaveObject.from_wave_file(self.audio_path)
+    
+    def play(self, anzahl):
+        for i in range(anzahl):
+            play_thread = threading.Thread(target=self.wave_obj.play)
+            play_thread.start()
+            time.sleep(60.0 / self.bpm)
+    
+            
+tic = time.perf_counter() # Start Time
+takt = Takt(120)
+takt.play(10)
+toc = time.perf_counter() # End Time
+
+print(f"Build finished in {(toc - tic)} seconds {(toc - tic)%60:0.0f} seconds")
+# For additional Precision
+print(f"Build finished in {toc - tic:0.4f} seconds")
 
 

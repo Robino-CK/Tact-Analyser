@@ -5,7 +5,7 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication([])
 
     widget = MyWidget()
-    widget.resize(200, 300)
+    widget.resize(200, 100)
     widget.show()
 
     sys.exit(app.exec())

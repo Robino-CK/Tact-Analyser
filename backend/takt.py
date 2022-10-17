@@ -15,10 +15,12 @@ class Takt:
             play_thread = threading.Thread(target=self.wave_obj.play)
             play_thread.start()
             time.sleep(60.0 / self.bpm)
-    
+
+    def stop(self):
+        return
             
-takt = Takt(120)
-takt.play(10)
+#takt = Takt(120)
+#takt.play(10)
 
 
 

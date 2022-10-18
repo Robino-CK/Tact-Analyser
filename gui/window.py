@@ -10,35 +10,41 @@ from backend.recorder import Recorder
 class MyWidget(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
-        self.resize(200, 50)
-        self.layout = QtWidgets.QHBoxLayout(self)
-        self.create_takt_gui()
-        self.create_recording_gui()
-    
-    def create_recording_gui(self):
+        self.resize(250, 50)
+        self.setWindowTitle('Takt Analyser')
+        self.layout = QtWidgets.QVBoxLayout(self)
+        self.layout.addLayout(self.get_controlling_line())
+        
+    def get_controlling_line(self):
+        hline = QtWidgets.QHBoxLayout()
+        self.create_takt_gui(hline)
+        self.create_recording_gui(hline)
+        return hline
+
+    def create_recording_gui(self, line):
         self.is_recording = False
         icon_recording = self.style().standardIcon(getattr(QStyle, "SP_DialogNoButton"))
         self.button_recording = QtWidgets.QPushButton(icon_recording, "")
         self.button_recording.clicked.connect(self.controll_recording)
-        self.layout.addWidget(self.button_recording)
+        line.addWidget(self.button_recording)
 
-    def create_takt_gui(self):
+    def create_takt_gui(self, line):
         # flag to decide which state GUI is 
         self.is_running_takt = False
         # start/stop - Button
         icon_play = self.style().standardIcon(getattr(QStyle, "SP_MediaPlay"))
         self.button_takt = QtWidgets.QPushButton(icon_play, "")
         self.button_takt.clicked.connect(self.controll_takt)
-        self.layout.addWidget(self.button_takt)
+        line.addWidget(self.button_takt)
         # bpm - Input
         self.line_edit_bpm = QLineEdit()
         self.line_edit_bpm.setText("120")
         onlyInt = QIntValidator()
         self.line_edit_bpm.setValidator(onlyInt)
-        self.layout.addWidget(self.line_edit_bpm)
+        line.addWidget(self.line_edit_bpm)
         # bpm - Label
         self.text_bpm = QLabel("bpm")
-        self.layout.addWidget(self.text_bpm)
+        line.addWidget(self.text_bpm)
 
         
 

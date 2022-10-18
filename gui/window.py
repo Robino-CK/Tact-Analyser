@@ -58,37 +58,58 @@ class MyWidget(QtWidgets.QWidget):
     def controll_takt(self):
         if (self.is_running_takt):
             self.is_running_takt = False
+            icon_start = self.style().standardIcon(getattr(QStyle, "SP_MediaPlay"))
+            self.button_takt.setIcon(icon_start)
+            self.button_analyser.setEnabled(True)
             self.stop_takt() 
         else:
             self.is_running_takt = True
+            icon_stop = self.style().standardIcon(getattr(QStyle, "SP_MediaPause"))
+            self.button_takt.setIcon(icon_stop)
+            self.button_analyser.setEnabled(False)
             self.start_takt()
-            
-    def stop_takt(self):
-        icon_start = self.style().standardIcon(getattr(QStyle, "SP_MediaPlay"))
-        self.button_takt.setIcon(icon_start)
-        self.stop_takt_event.set()
-
-    def start_takt(self):
-        icon_stop = self.style().standardIcon(getattr(QStyle, "SP_MediaPause"))
-        self.button_takt.setIcon(icon_stop)
-        bpm = self.line_edit_bpm.displayText()
-        takt = Takt(int(bpm)) # line_edit_bpm is just expecting Ints, so no worryes.
-        self.stop_takt_event= threading.Event()
-        self.play_thread = threading.Thread(target=takt.play, args= [self.stop_takt_event])
-        self.play_thread.start()
+   
+    
 
     @QtCore.Slot()
     def controll_recording(self):
         if (self.is_recording):
             self.is_recording = False
+            icon_start = self.style().standardIcon(getattr(QStyle, "SP_DialogNoButton"))
+            self.button_recording.setIcon(icon_start)
+            self.button_analyser.setEnabled(True)
             self.stop_recording()
         else:
             self.is_recording = True
+            icon_start = self.style().standardIcon(getattr(QStyle, "SP_DialogSaveButton"))
+            self.button_recording.setIcon(icon_start)
+            self.button_analyser.setEnabled(False)
             self.start_recording()
+
     
+    @QtCore.Slot()
+    def controll_analyser(self):
+        if (self.is_analyser):
+            self.is_analyser = False
+            self.button_takt.setEnabled(True)
+            self.button_recording.setEnabled(True)
+            self.stop_analyser()
+        else:
+            self.is_analyser = True
+            self.button_takt.setEnabled(False)
+            self.button_recording.setEnabled(False)
+            self.start_anaylser()
+    
+    def start_anaylser(self):
+        self.start_takt()
+        self.start_recording()
+
+    def stop_analyser(self):
+        self.stop_takt()
+        self.stop_recording()
+    
+        
     def start_recording(self):
-        icon_start = self.style().standardIcon(getattr(QStyle, "SP_DialogSaveButton"))
-        self.button_recording.setIcon(icon_start)
         recorder = Recorder()
         self.stop_recording_event= threading.Event()
         self.record_thread = threading.Thread(target=recorder.record, args= [self.stop_recording_event])
@@ -96,23 +117,15 @@ class MyWidget(QtWidgets.QWidget):
 
     
     def stop_recording(self):
-        icon_start = self.style().standardIcon(getattr(QStyle, "SP_DialogNoButton"))
-        self.button_recording.setIcon(icon_start)
         self.stop_recording_event.set()
-    
-    @QtCore.Slot()
-    def controll_analyser(self):
-        if (self.is_analyser):
-            self.is_analyser = False
-            self.stop_analyser()
-        else:
-            self.is_analyser = True
-            self.start_anaylser()
-    
-    def start_anaylser(self):
-        icon_start = self.style().standardIcon(getattr(QStyle, "SP_DialogSaveButton"))
-        self.button_analyser.setIcon(icon_start)
+                 
+    def stop_takt(self):
+        self.stop_takt_event.set()
 
-    def stop_analyser(self):
-        icon_start = self.style().standardIcon(getattr(QStyle, "SP_FileDialogContentsView"))
-        self.button_analyser.setIcon(icon_start)
+    def start_takt(self):
+        bpm = self.line_edit_bpm.displayText()
+        takt = Takt(int(bpm)) # line_edit_bpm is just expecting Ints, so no worryes.
+        self.stop_takt_event= threading.Event()
+        self.play_thread = threading.Thread(target=takt.play, args= [self.stop_takt_event])
+        self.play_thread.start()
+       

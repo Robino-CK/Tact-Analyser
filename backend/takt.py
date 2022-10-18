@@ -11,7 +11,7 @@ class Takt:
         self.audio_path = 'res/drum_stick.wav'  #sound origin: https://www.fesliyanstudios.com/royalty-free-sound-effects-download/drum-sticks-278
         self.wave_obj = sa.WaveObject.from_wave_file(self.audio_path)
     
-    def play(self, stop_event, save=True):
+    def play(self, stop_event):
         frames = []
         while not stop_event.is_set():
             dateTimeObj = datetime.now()
@@ -20,12 +20,7 @@ class Takt:
             play_thread = threading.Thread(target=self.wave_obj.play)
             play_thread.start()
             time.sleep(60.0 / self.bpm)
-        if (save):
-            dateTimeObj = datetime.now()
-            filename = dateTimeObj.strftime("%Y-%m-%d-%H-%M-%S") + ".p" #-%f
-            path = "res/recorded_takte/" + filename
-            with open( path, "wb" ) as f:
-                pickle.dump( frames, f)
+   
 
 
 

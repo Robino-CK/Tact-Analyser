@@ -98,17 +98,18 @@ class Controll_Line(QtWidgets.QHBoxLayout):
     
     def start_anaylser(self):
         self.start_takt()
-        self.start_recording()
+        bpm = self.line_edit_bpm.displayText()
+        self.start_recording(bpm=bpm)
 
     def stop_analyser(self):
         self.stop_takt()
         self.stop_recording()
     
         
-    def start_recording(self):
+    def start_recording(self, bpm = None):
         recorder = Recorder()
         self.stop_recording_event= threading.Event()
-        self.record_thread = threading.Thread(target=recorder.record, args= [self.stop_recording_event])
+        self.record_thread = threading.Thread(target=recorder.record, args= [self.stop_recording_event, bpm])
         self.record_thread.start()
 
     

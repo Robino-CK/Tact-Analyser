@@ -1,7 +1,7 @@
-from asyncio.windows_events import NULL
-from PySide6 import QtCore, QtWidgets, QtGui 
+
+from PySide6 import QtCore, QtWidgets
 from PySide6.QtGui import QIntValidator
-from PySide6.QtWidgets import QApplication, QGridLayout, QPushButton, QStyle, QLabel, QLineEdit
+from PySide6.QtWidgets import QStyle, QLabel, QLineEdit
 import threading
 from backend.takt import Takt   
 from backend.recorder import Recorder

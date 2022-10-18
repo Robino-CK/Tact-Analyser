@@ -83,11 +83,15 @@ class Controll_Line(QtWidgets.QHBoxLayout):
     def controll_analyser(self):
         if (self.is_analyser):
             self.is_analyser = False
+            icon_start = self.parent.style().standardIcon(getattr(QStyle, "SP_FileDialogContentsView"))
+            self.button_analyser.setIcon(icon_start)
             self.button_takt.setEnabled(True)
             self.button_recording.setEnabled(True)
             self.stop_analyser()
         else:
             self.is_analyser = True
+            icon_start = self.parent.style().standardIcon(getattr(QStyle, "SP_DialogSaveButton"))
+            self.button_analyser.setIcon(icon_start)
             self.button_takt.setEnabled(False)
             self.button_recording.setEnabled(False)
             self.start_anaylser()

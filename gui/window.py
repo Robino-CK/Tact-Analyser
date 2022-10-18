@@ -19,6 +19,7 @@ class MyWidget(QtWidgets.QWidget):
         hline = QtWidgets.QHBoxLayout()
         self.create_takt_gui(hline)
         self.create_recording_gui(hline)
+        self.create_analyser_gui(hline)
         return hline
 
     def create_recording_gui(self, line):
@@ -46,7 +47,12 @@ class MyWidget(QtWidgets.QWidget):
         self.text_bpm = QLabel("bpm")
         line.addWidget(self.text_bpm)
 
-        
+    def create_analyser_gui(self, line):
+        self.is_analyser = False
+        icon_play = self.style().standardIcon(getattr(QStyle, "SP_FileDialogContentsView"))
+        self.button_analyser = QtWidgets.QPushButton(icon_play, "")
+        self.button_analyser.clicked.connect(self.controll_analyser)
+        line.addWidget(self.button_analyser)
 
     @QtCore.Slot()
     def controll_takt(self):
@@ -93,3 +99,20 @@ class MyWidget(QtWidgets.QWidget):
         icon_start = self.style().standardIcon(getattr(QStyle, "SP_DialogNoButton"))
         self.button_recording.setIcon(icon_start)
         self.stop_recording_event.set()
+    
+    @QtCore.Slot()
+    def controll_analyser(self):
+        if (self.is_analyser):
+            self.is_analyser = False
+            self.stop_analyser()
+        else:
+            self.is_analyser = True
+            self.start_anaylser()
+    
+    def start_anaylser(self):
+        icon_start = self.style().standardIcon(getattr(QStyle, "SP_DialogSaveButton"))
+        self.button_analyser.setIcon(icon_start)
+
+    def stop_analyser(self):
+        icon_start = self.style().standardIcon(getattr(QStyle, "SP_FileDialogContentsView"))
+        self.button_analyser.setIcon(icon_start)

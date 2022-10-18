@@ -1,19 +1,43 @@
-import re
-import sounddevice as sd
-from scipy.io.wavfile import write
+import pyaudio
+import wave
 
-
-def start_recorder():
-    rec = Recorder()
-    
-
-
+#https://realpython.com/playing-and-recording-sound-python/ -> see Recoding Audio with pyaudio
 class Recorder:
-    def __init__(self, time_in_seconds = 3):
-        self.time_in_seconds = time_in_seconds
-        sample_rate = 44100
-        myrecording = sd.rec(int(time_in_seconds * sample_rate), samplerate=sample_rate, channels=2)
-        sd.wait()  # Wait until recording is finished
-        write('res/asd.wav', sample_rate, myrecording)  # Save as WAV file 
+    def __init__(self):
+        self.chunk = 1024  # Record in chunks of 1024 samples
+        self.sample_format = pyaudio.paInt16  # 16 bits per sample
+        self.channels = 1
+        self.fs = 44100  # Record at 44100 samples per second
+        self.seconds = 5
+        self.filename = "output.wav"
 
-
+    def record(self, stop_event):
+        frames = self.get_audio_frames(stop_event)
+        self.save_audio_frames(frames)
+        
+    def get_audio_frames(self, stop_event):
+        self.py_audio = pyaudio.PyAudio()  # Create an interface to PortAudio
+        stream = self.py_audio.open(format=self.sample_format,
+                channels=self.channels,
+                rate=self.fs,
+                frames_per_buffer=self.chunk,
+                input=True)
+        frames = []  # Initialize array to store frames
+        while not stop_event.is_set():
+            data = stream.read(self.chunk)
+            frames.append(data)
+       
+        # Stop and close the stream 
+        stream.stop_stream()
+        stream.close()
+        # Terminate the PortAudio interface
+        self.py_audio.terminate()
+        return frames
+    
+    def save_audio_frames(self, frames):
+        wf = wave.open(self.filename, 'wb')
+        wf.setnchannels(self.channels)
+        wf.setsampwidth(self.py_audio.get_sample_size(self.sample_format))
+        wf.setframerate(self.fs)
+        wf.writeframes(b''.join(frames))
+        wf.close()

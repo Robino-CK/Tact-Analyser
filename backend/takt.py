@@ -17,9 +17,6 @@ class Takt:
             play_thread.start()
             time.sleep(60.0 / self.bpm)
 
-            
-#takt = Takt(120)
-#takt.play(10)
 
 
 

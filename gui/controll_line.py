@@ -5,7 +5,8 @@ from PySide6.QtWidgets import QStyle, QLabel, QLineEdit
 import threading
 from backend.takt import Takt   
 from backend.recorder import Recorder
-
+from datetime import datetime
+import config
 class Controll_Line(QtWidgets.QHBoxLayout):
     def __init__(self, parent):
         super().__init__()
@@ -97,9 +98,10 @@ class Controll_Line(QtWidgets.QHBoxLayout):
             self.start_anaylser()
     
     def start_anaylser(self):
-       
-        self.start_recording()
-        self.start_takt()
+        dateTimeObj = datetime.now()
+        folder_name = dateTimeObj.strftime(config.foldername_date_format)
+        self.start_recording(folder_name)
+        self.start_takt(folder_name)
      
 
     def stop_analyser(self):
@@ -107,11 +109,13 @@ class Controll_Line(QtWidgets.QHBoxLayout):
         self.stop_recording()
     
         
-    def start_recording(self ):
+    def start_recording(self, folder_name = None ):
         recorder = Recorder()
-       
+        if (folder_name is None):
+            dateTimeObj = datetime.now()
+            folder_name = dateTimeObj.strftime(config.foldername_date_format)
         self.stop_recording_event= threading.Event()
-        self.record_thread = threading.Thread(target=recorder.record, args= [self.stop_recording_event])
+        self.record_thread = threading.Thread(target=recorder.record, args= [self.stop_recording_event, folder_name])
         self.record_thread.start()
 
     
@@ -121,10 +125,10 @@ class Controll_Line(QtWidgets.QHBoxLayout):
     def stop_takt(self):
         self.stop_takt_event.set()
 
-    def start_takt(self):
+    def start_takt(self, folder_name):
         bpm = self.line_edit_bpm.displayText()
         takt = Takt(int(bpm)) # line_edit_bpm is just expecting Ints, so no worryes.
         self.stop_takt_event= threading.Event()
-        self.play_thread = threading.Thread(target=takt.play, args= [self.stop_takt_event])
+        self.play_thread = threading.Thread(target=takt.play, args= [self.stop_takt_event, folder_name])
         self.play_thread.start()
        

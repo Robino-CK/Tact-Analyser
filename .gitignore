@@ -170,5 +170,4 @@ taktanalyser/share/man/man1/ttx.1
 taktanalyser/share/jupyter/kernels/python3/kernel.json
 
 # recorded res:
-res/recorded_audios/
-res/recorded_takte/
+res/user/*

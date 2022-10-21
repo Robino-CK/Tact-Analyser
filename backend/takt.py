@@ -3,7 +3,7 @@ import time
 import threading
 from datetime import datetime
 import pickle
-
+import config
 class Takt:
     # docu: https://simpleaudio.readthedocs.io/en/latest/simpleaudio.html
     def __init__(self, bpm):
@@ -16,7 +16,7 @@ class Takt:
         frames = []
         start_time = time.time() 
         dateTimeObj = datetime.now()
-        filename = dateTimeObj.strftime("%Y-%m-%d-%H-%M-%S-%f")  
+        filename = dateTimeObj.strftime(config.filename_date_format)  
         while not stop_event.is_set():
             time_stap = time.time() - start_time
             frames.append(time_stap)

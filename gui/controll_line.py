@@ -5,7 +5,6 @@ from PySide6.QtWidgets import QStyle, QLabel, QLineEdit
 import threading
 from backend.takt import Takt   
 from backend.recorder import Recorder
-from datetime import datetime
 
 class Controll_Line(QtWidgets.QHBoxLayout):
     def __init__(self, parent):

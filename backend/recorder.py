@@ -1,6 +1,7 @@
 import pyaudio
 import wave
 from datetime import datetime
+import config
 #https://realpython.com/playing-and-recording-sound-python/ -> see Recoding Audio with pyaudio
 class Recorder:
     def __init__(self):
@@ -26,7 +27,7 @@ class Recorder:
                 input=True)
         frames = []  # Initialize array to store frames
         dateTimeObj = datetime.now()
-        self.filename = dateTimeObj.strftime("%Y-%m-%d-%H-%M-%S-%f")  #-%f
+        self.filename = dateTimeObj.strftime(config.filename_date_format)  #-%f
         while not stop_event.is_set():
             data = stream.read(self.chunk)
             frames.append(data)
@@ -39,8 +40,8 @@ class Recorder:
         return frames
     
     def save_audio_frames(self, frames):
-        filename =  self.filename  + ".wav"
-        path = "res/recorded_audios/" + filename
+        filename =  self.filename  + config.audio_format
+        path = config.audio_res_path + filename
         wf = wave.open(path, 'wb')
         wf.setnchannels(self.channels)
         wf.setsampwidth(self.py_audio.get_sample_size(self.sample_format))

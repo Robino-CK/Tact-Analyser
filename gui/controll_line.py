@@ -5,6 +5,7 @@ from PySide6.QtWidgets import QStyle, QLabel, QLineEdit
 import threading
 from backend.takt import Takt   
 from backend.recorder import Recorder
+from datetime import datetime
 
 class Controll_Line(QtWidgets.QHBoxLayout):
     def __init__(self, parent):
@@ -97,19 +98,21 @@ class Controll_Line(QtWidgets.QHBoxLayout):
             self.start_anaylser()
     
     def start_anaylser(self):
+       
+        self.start_recording()
         self.start_takt()
-        bpm = self.line_edit_bpm.displayText()
-        self.start_recording(bpm=bpm)
+     
 
     def stop_analyser(self):
         self.stop_takt()
         self.stop_recording()
     
         
-    def start_recording(self, bpm = None):
+    def start_recording(self ):
         recorder = Recorder()
+       
         self.stop_recording_event= threading.Event()
-        self.record_thread = threading.Thread(target=recorder.record, args= [self.stop_recording_event, bpm])
+        self.record_thread = threading.Thread(target=recorder.record, args= [self.stop_recording_event])
         self.record_thread.start()
 
     

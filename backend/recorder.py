@@ -11,9 +11,11 @@ class Recorder:
         self.seconds = 5
         
 
-    def record(self, stop_event, bpm):
+    def record(self, stop_event):
+       
+        
         frames = self.get_audio_frames(stop_event)
-        self.save_audio_frames(frames, bpm)
+        self.save_audio_frames(frames)
         
     def get_audio_frames(self, stop_event):
         self.py_audio = pyaudio.PyAudio()  # Create an interface to PortAudio
@@ -23,6 +25,8 @@ class Recorder:
                 frames_per_buffer=self.chunk,
                 input=True)
         frames = []  # Initialize array to store frames
+        dateTimeObj = datetime.now()
+        self.filename = dateTimeObj.strftime("%Y-%m-%d-%H-%M-%S-%f")  #-%f
         while not stop_event.is_set():
             data = stream.read(self.chunk)
             frames.append(data)
@@ -34,11 +38,8 @@ class Recorder:
         self.py_audio.terminate()
         return frames
     
-    def save_audio_frames(self, frames, bpm):
-        dateTimeObj = datetime.now()
-        filename = dateTimeObj.strftime("%Y-%m-%d-%H-%M-%S") + ".wav" #-%f
-        if (bpm is not None):
-            filename = 'B' + bpm + 'D' + filename
+    def save_audio_frames(self, frames):
+        filename =  self.filename  + ".wav"
         path = "res/recorded_audios/" + filename
         wf = wave.open(path, 'wb')
         wf.setnchannels(self.channels)

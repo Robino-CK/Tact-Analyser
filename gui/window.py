@@ -13,3 +13,4 @@ class Takt_Analyser_GUI(QtWidgets.QWidget):
         c_line = Controll_Line(self)
         self.layout.addLayout(c_line)
         t_lines = Track_Lines(self)        
+        self.layout.addLayout(t_lines)

@@ -2,25 +2,26 @@
 from PySide6 import QtCore, QtWidgets
 from PySide6.QtGui import QIntValidator
 from PySide6.QtWidgets import QStyle, QLabel, QLineEdit
-import threading
-from backend.takt import Takt   
-from backend.recorder import Recorder
-import os 
-
-audio_directory = 'res/recorded_audios/'
-
+import os
+from backend.analyser import Analyser 
+import config
+from datetime import datetime
 
 class Track_Lines(QtWidgets.QVBoxLayout):
     def __init__(self, parent):
         super().__init__()
         self.parent = parent
-        for root, _, files in os.walk(audio_directory, topdown=False):
-            for name in files:
-                self.get_line(root , name)
+        for root, dirs, files in os.walk(config.user_res, topdown=False):
+            for dir in dirs:
+                self.addLayout(self.get_line(dir))
                 
-    def get_line(self, audio_path, audio_name):
+    def get_line(self, dir):
         hline = QtWidgets.QHBoxLayout()
-       # bpm = (int) (audio_name.split("B")[1].replace(".wav", ""))
+        analyser = Analyser(dir)
         
-        return    
+        date_obj = datetime.strptime(dir, config.foldername_date_format)
+        date_str = date_obj.strftime("%d %b %Y, %H:%M:%S")
+        hline.addWidget(QtWidgets.QLabel(date_str))
+        hline.addWidget(analyser.get_diagramm())
+        return hline
 

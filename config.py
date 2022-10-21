@@ -1,4 +1,5 @@
 filename_date_format = "%Y-%m-%d-%H-%M-%S-%f"
 foldername_date_format = "%Y-%m-%d-%H-%M-%S"
 audio_format = ".wav"
+pickle_format = ".pickle"
 user_res = "res/user/"

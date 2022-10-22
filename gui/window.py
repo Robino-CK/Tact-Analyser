@@ -10,7 +10,8 @@ class Takt_Analyser_GUI(QtWidgets.QWidget):
         self.resize(250, 50)
         self.setWindowTitle('Takt Analyser')
         self.layout = QtWidgets.QVBoxLayout(self)
-        c_line = Controll_Line(self)
+        c_line = Controll_Line()
         self.layout.addLayout(c_line)
-        t_lines = Track_Lines(self)        
+        t_lines = Track_Lines()        
         self.layout.addLayout(t_lines)
+        

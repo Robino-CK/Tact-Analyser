@@ -8,9 +8,8 @@ from backend.recorder import Recorder
 from datetime import datetime
 import config
 class Controll_Line(QtWidgets.QHBoxLayout):
-    def __init__(self, parent):
+    def __init__(self):
         super().__init__()
-        self.parent = parent
         self.create_takt_gui()
         self.create_recording_gui()
         self.create_analyser_gui()
@@ -18,7 +17,7 @@ class Controll_Line(QtWidgets.QHBoxLayout):
 
     def create_recording_gui(self):
         self.is_recording = False
-        icon_recording = self.parent.style().standardIcon(getattr(QStyle, "SP_DialogNoButton"))
+        icon_recording = QtWidgets.QWidget().style().standardIcon(getattr(QStyle, "SP_DialogNoButton"))
         self.button_recording = QtWidgets.QPushButton(icon_recording, "")
         self.button_recording.clicked.connect(self.controll_recording)
         self.addWidget(self.button_recording)
@@ -27,7 +26,7 @@ class Controll_Line(QtWidgets.QHBoxLayout):
         # flag to decide which state GUI is 
         self.is_running_takt = False
         # start/stop - Button
-        icon_play = self.parent.style().standardIcon(getattr(QStyle, "SP_MediaPlay"))
+        icon_play = QtWidgets.QWidget().style().standardIcon(getattr(QStyle, "SP_MediaPlay"))
         self.button_takt = QtWidgets.QPushButton(icon_play, "")
         self.button_takt.clicked.connect(self.controll_takt)
         self.addWidget(self.button_takt)
@@ -43,7 +42,7 @@ class Controll_Line(QtWidgets.QHBoxLayout):
 
     def create_analyser_gui(self):
         self.is_analyser = False
-        icon_play = self.parent.style().standardIcon(getattr(QStyle, "SP_FileDialogContentsView"))
+        icon_play = QtWidgets.QWidget().style().standardIcon(getattr(QStyle, "SP_FileDialogContentsView"))
         self.button_analyser = QtWidgets.QPushButton(icon_play, "")
         self.button_analyser.clicked.connect(self.controll_analyser)
         self.addWidget(self.button_analyser)
@@ -52,13 +51,13 @@ class Controll_Line(QtWidgets.QHBoxLayout):
     def controll_takt(self):
         if (self.is_running_takt):
             self.is_running_takt = False
-            icon_start = self.parent.style().standardIcon(getattr(QStyle, "SP_MediaPlay"))
+            icon_start = QtWidgets.QWidget().style().standardIcon(getattr(QStyle, "SP_MediaPlay"))
             self.button_takt.setIcon(icon_start)
             self.button_analyser.setEnabled(True)
             self.stop_takt() 
         else:
             self.is_running_takt = True
-            icon_stop = self.parent.style().standardIcon(getattr(QStyle, "SP_MediaPause"))
+            icon_stop = QtWidgets.QWidget().style().standardIcon(getattr(QStyle, "SP_MediaPause"))
             self.button_takt.setIcon(icon_stop)
             self.button_analyser.setEnabled(False)
             self.start_takt()
@@ -68,13 +67,13 @@ class Controll_Line(QtWidgets.QHBoxLayout):
     def controll_recording(self):
         if (self.is_recording):
             self.is_recording = False
-            icon_start = self.parent.style().standardIcon(getattr(QStyle, "SP_DialogNoButton"))
+            icon_start = QtWidgets.QWidget().style().standardIcon(getattr(QStyle, "SP_DialogNoButton"))
             self.button_recording.setIcon(icon_start)
             self.button_analyser.setEnabled(True)
             self.stop_recording()
         else:
             self.is_recording = True
-            icon_start = self.parent.style().standardIcon(getattr(QStyle, "SP_DialogSaveButton"))
+            icon_start = QtWidgets.QWidget().style().standardIcon(getattr(QStyle, "SP_DialogSaveButton"))
             self.button_recording.setIcon(icon_start)
             self.button_analyser.setEnabled(False)
             self.start_recording()
@@ -84,14 +83,14 @@ class Controll_Line(QtWidgets.QHBoxLayout):
     def controll_analyser(self):
         if (self.is_analyser):
             self.is_analyser = False
-            icon_start = self.parent.style().standardIcon(getattr(QStyle, "SP_FileDialogContentsView"))
+            icon_start = QtWidgets.QWidget().style().standardIcon(getattr(QStyle, "SP_FileDialogContentsView"))
             self.button_analyser.setIcon(icon_start)
             self.button_takt.setEnabled(True)
             self.button_recording.setEnabled(True)
             self.stop_analyser()
         else:
             self.is_analyser = True
-            icon_start = self.parent.style().standardIcon(getattr(QStyle, "SP_DialogSaveButton"))
+            icon_start = QtWidgets.QWidget().style().standardIcon(getattr(QStyle, "SP_DialogSaveButton"))
             self.button_analyser.setIcon(icon_start)
             self.button_takt.setEnabled(False)
             self.button_recording.setEnabled(False)

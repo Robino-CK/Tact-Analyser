@@ -1,5 +1,5 @@
 
-from asyncio.windows_events import NULL
+#from asyncio.windows_events import NULL
 import imp
 from PySide6 import  QtWidgets 
 from gui.controll_line import Controll_Line
